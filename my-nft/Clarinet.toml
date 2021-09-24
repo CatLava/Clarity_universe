@@ -1,0 +1,6 @@
+[project]
+name = "my-nft"
+requirements = []
+[contracts.create-nft]
+path = "contracts/create-nft.clar"
+depends_on = ["sip009-nft-trait"]
