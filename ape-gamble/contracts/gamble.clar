@@ -13,6 +13,9 @@
 (define-data-var pot uint u0)
 (define-data-var fee uint u10)
 
+(define-map gamblers uint {player: principal, bet: uint})
+
+
 ;; private functions
 ;;
 
@@ -32,5 +35,20 @@
     (var-set pot (+ (var-get pot) amount))
     (ok (var-get pot))
   )
+)
+;; amount to gamble
+;; what seat to take 1-3
+(define-public (play2 (amount uint) (gambler uint))
+  (begin
+    (unwrap! (stx-transfer? amount tx-sender (as-contract tx-sender)) (err ERR_TRANSFER))
+    (map-set gamblers gambler {player: tx-sender, bet: amount})
+    (ok (map-get? gamblers gambler))
+  )
+)
+
+(define-read-only (get-gamblers)
+  (map-get? gamblers u1)
+  (map-get? gamblers u2)
+  (map-get? gamblers u3)
 )
 ;; tx-sender sends to contract
