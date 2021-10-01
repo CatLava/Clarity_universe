@@ -13,7 +13,7 @@
 (define-data-var pot uint u0)
 (define-data-var fee uint u10)
 
-(define-map gamblers uint {player: principal, bet: uint})
+(define-map gamblers uint {player: principal, bet: uint, number: uint})
 
 
 ;; private functions
@@ -38,25 +38,43 @@
 )
 ;; amount to gamble
 ;; what seat to take 1-3
-(define-public (play2 (amount uint) (gambler uint))
+(define-public (play2 (amount uint) (gambler uint) (num_fun uint))
   (begin
     (unwrap! (stx-transfer? amount tx-sender (as-contract tx-sender)) (err ERR_TRANSFER))
-    (map-set gamblers gambler {player: tx-sender, bet: amount})
+    (map-set gamblers gambler {player: tx-sender, bet: amount, number: num_fun})
     (ok (map-get? gamblers gambler))
   )
 )
 
 (define-read-only (get-gamblers)
-  (print (map-get? gamblers u1))
+  (begin
+    (print (map-get? gamblers u1))
+    (print (map-get? gamblers u2))
+  )
 )
 
-;; below is trying to randomize the function
-
-;; Get a SHA256 of number input from the users
-(define-data-var test (hash160 10))
-
-(define-private (get-digits (char (buff 1))) (get-digits char 0x1))
+;; Below will take num_fun from both gamblers
+;; add the numbers together, mixer function numfun*(22/7)
+;; if odd player1 wins, if even player2 wins
+(define-data-var test uint u101)
 
 (define-private (winner)
-  (print test)
+  (begin
+    (var-set test (* (var-get test) u22))
+    (var-set test (/ (var-get test) u7))
+    (var-set test (mod (var-get test) u2))
+    (ok (var-get test))
+  )
+)
+
+(define-public (get-winner)
+  (begin
+    (print (var-get test))
+    (if (is-eq (var-get test) u0)
+      (var-get test)
+      (var-get test)
+      ;;(stx-transfer? (var-get pot) (as-contract tx-sender) (as-contract tx-sender))
+      ;;(stx-transfer? (var-get pot) (as-contract tx-sender) (as-contract tx-sender))
+    )
+  )
 )
