@@ -47,8 +47,16 @@
 )
 
 (define-read-only (get-gamblers)
-  (map-get? gamblers u1)
-  (map-get? gamblers u2)
-  (map-get? gamblers u3)
+  (print (map-get? gamblers u1))
 )
-;; tx-sender sends to contract
+
+;; below is trying to randomize the function
+
+;; Get a SHA256 of number input from the users
+(define-data-var test (hash160 10))
+
+(define-private (get-digits (char (buff 1))) (get-digits char 0x1))
+
+(define-private (winner)
+  (print test)
+)
