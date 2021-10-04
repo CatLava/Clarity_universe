@@ -12,8 +12,12 @@
 ;;
 (define-data-var pot uint u0)
 (define-data-var fee uint u10)
+(define-data-var lucky_num uint u1)
+(define-data-var player1 (optional principal) none)
+(define-data-var player2 (optional principal) none)
 
-(define-map gamblers uint {player: principal, bet: uint, number: uint})
+(define-map gamblers (string-ascii 34) {player: principal})
+
 
 
 ;; private functions
@@ -37,28 +41,35 @@
   )
 )
 ;; amount to gamble
-;; what seat to take 1-3
+;; what seat to take 1 or 2
 (define-public (play2 (amount uint) (gambler uint) (num_fun uint))
   (begin
     (unwrap! (stx-transfer? amount tx-sender (as-contract tx-sender)) (err ERR_TRANSFER))
-    (map-set gamblers gambler {player: tx-sender, bet: amount, number: num_fun})
-    (ok (map-get? gamblers gambler))
+    (var-set pot (+ (var-get pot) amount))
+    (var-set player1  (some tx-sender))
+    (var-set lucky_num (+ (var-get lucky_num) amount))
+    (ok (var-get player1))
   )
 )
 
-(define-read-only (get-gamblers)
-  (begin
-    (print (map-get? gamblers u1))
-    (print (map-get? gamblers u2))
-  )
+(define-read-only (get-gambler1)
+    (print (var-get player1))
 )
+
+(define-read-only (get-gambler2)
+  (print (var-get player2))
+)
+
+
 
 ;; Below will take num_fun from both gamblers
 ;; add the numbers together, mixer function numfun*(22/7)
 ;; if odd player1 wins, if even player2 wins
-(define-data-var test uint u101)
+(define-data-var test uint u0)
 
-(define-private (winner)
+;; Verify winner function
+;; implment from gamblers next step
+(define-public (winner)
   (begin
     (var-set test (* (var-get test) u22))
     (var-set test (/ (var-get test) u7))
@@ -70,11 +81,12 @@
 (define-public (get-winner)
   (begin
     (print (var-get test))
+    ;;(print (unwrap-panic (map-get?)))
     (if (is-eq (var-get test) u0)
-      (var-get test)
-      (var-get test)
-      ;;(stx-transfer? (var-get pot) (as-contract tx-sender) (as-contract tx-sender))
-      ;;(stx-transfer? (var-get pot) (as-contract tx-sender) (as-contract tx-sender))
+      ;;(ok (var-get test))
+      ;;(ok (var-get test))
+      (as-contract (stx-transfer? (var-get pot) tx-sender (unwrap-panic (var-get player1))))
+      (as-contract (stx-transfer? (var-get pot) tx-sender (unwrap-panic (var-get player1))))
     )
   )
 )
