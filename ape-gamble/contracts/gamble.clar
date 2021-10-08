@@ -23,7 +23,7 @@
 ;; unable to reference principal in contract calls, reference variables above
 (define-map gamblers (string-ascii 34) {player: principal})
 
-
+;; This was  a proof of concept funciton that
 (define-public (play (amount uint))
   (begin
     (unwrap! (stx-transfer? amount tx-sender (as-contract tx-sender)) (err u101))
@@ -72,7 +72,7 @@
 ;; Verify winner function
 ;; implment from gamblers next step
 ;; This function needs to be private and called when determining the winner
-(define-private (winner)
+(define-public (winner)
   (begin
     (var-set lucky_num (* (var-get lucky_num) u22))
     (var-set lucky_num (/ (var-get lucky_num) u7))
@@ -83,7 +83,6 @@
 
 (define-public (get-winner)
   (begin
-    winner
     (print (var-get lucky_num))
     ;;(print (unwrap-panic (map-get?)))
     (if (is-eq (var-get lucky_num) u0)
