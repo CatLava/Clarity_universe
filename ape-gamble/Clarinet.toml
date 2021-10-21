@@ -4,3 +4,11 @@ requirements = []
 [contracts.gamble]
 path = "contracts/gamble.clar"
 depends_on = []
+
+[contracts.nft-trait]
+path = "contracts/nft-trait.clar"
+depends_on = []
+
+[contracts.winner-nft]
+path = "contracts/winner-nft.clar"
+depends_on = ["nft-trait"]
