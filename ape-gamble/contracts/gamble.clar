@@ -6,9 +6,11 @@
 ;; constants
 ;;
 (define-constant gamble-amount u10)
+
 (define-constant ERR_INVALID_AMOUNT (err u99))
 (define-constant ERR_TRANSFER (err u100))
 (define-constant ERR_INVALID_PLAYER (err u101))
+(define-constant ERR_NOT_WINNER (err u102))
 
 ;; data maps and vars
 ;;
@@ -17,13 +19,15 @@
 (define-data-var lucky_num uint u1)
 (define-data-var player1 (optional principal) none)
 (define-data-var player2 (optional principal) none)
+(define-data-var winner-mint (optional principal) none)
+
 
 
 ;; This map is not used
 ;; unable to reference principal in contract calls, reference variables above
 (define-map gamblers (string-ascii 34) {player: principal})
 
-;; This was  a proof of concept funciton that
+;; This was  a proof of concept function that
 (define-public (play (amount uint))
   (begin
     (unwrap! (stx-transfer? amount tx-sender (as-contract tx-sender)) (err u101))
@@ -57,8 +61,6 @@
   (print (var-get lucky_num))
 )
 
-
-
 (define-read-only (get-pot)
   (var-get pot)
 )
@@ -72,24 +74,42 @@
 ;; Verify winner function
 ;; implment from gamblers next step
 ;; This function needs to be private and called when determining the winner
-(define-public (winner)
+;; Function returns a boolean to determine a winner
+(define-private (winner)
   (begin
     (var-set lucky_num (* (var-get lucky_num) u22))
     (var-set lucky_num (/ (var-get lucky_num) u7))
     (var-set lucky_num (mod (var-get lucky_num) u2))
-    (ok (var-get lucky_num))
+    (is-eq (var-get lucky_num) u0)
   )
 )
 
 (define-public (get-winner)
   (begin
     (print (var-get lucky_num))
-    ;;(print (unwrap-panic (map-get?)))
-    (if (is-eq (var-get lucky_num) u0)
+    (if (winner)
       ;;(ok (var-get test))
       ;;(ok (var-get test))
       (as-contract (stx-transfer? (var-get pot) tx-sender (unwrap-panic (var-get player1))))
       (as-contract (stx-transfer? (var-get pot) tx-sender (unwrap-panic (var-get player2))))
     )
+  )
+)
+
+;; Need a function to allow nft mint for winner
+(define-private (set-mint-winner)
+  (if (is-eq (var-get lucky_num) u0)
+    (var-set winner-mint (var-get player1))
+    (var-set winner-mint (var-get player2))
+
+  )
+)
+
+;; This is calling an outside contract to mint the nft
+;; Must also be set in the config.toml component
+(define-public (winner-receive)
+  (begin
+    (asserts! (is-eq (unwrap-panic (var-get winner-mint)) tx-sender) (err ERR_NOT_WINNER))
+    (ok (as-contract (contract-call? .winner-nft claim)))
   )
 )
