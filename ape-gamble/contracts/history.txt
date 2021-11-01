@@ -1,21 +1,16 @@
 #V2
-(contract-call? .gamble play2 u10 u0 u23)
-::set_tx_sender ST20ATRN26N9P05V2F1RHFRV24X8C8M3W54E427B2
-::get_assets_maps
-(contract-call? ST1HTBVD3JG9C05J7HBJTHGR0GGW7KXW28M5JS8QE.gamble  play2 u10 u1 u1)
-(contract-call? .gamble  play2 u10 u1 u1)\n
-(contract-call? ST20ATRN26N9P05V2F1RHFRV24X8C8M3W54E427B2.gamble play2 u10 u1 u1)\n
-(contract-call? .gamble  play2 u10 u1 u1)\n
-(contract-call? ‘ST1HTBVD3JG9C05J7HBJTHGR0GGW7KXW28M5JS8QE.gamble’  play2 u10 u1 u1)
-::get_assets_maps
-(contract-call? ST1HTBVD3JG9C05J7HBJTHGR0GGW7KXW28M5JS8QE.gamble get-pot)
-(contract-call? 'ST1HTBVD3JG9C05J7HBJTHGR0GGW7KXW28M5JS8QE.gamble get-pot)
-(contract-call? 'ST1HTBVD3JG9C05J7HBJTHGR0GGW7KXW28M5JS8QE.gamble play2 u10 u1 u1)
-(contract-call? 'ST1HTBVD3JG9C05J7HBJTHGR0GGW7KXW28M5JS8QE.gamble get-pot)
-(contract-call? 'ST1HTBVD3JG9C05J7HBJTHGR0GGW7KXW28M5JS8QE.gamble get-lucky-num)
-(contract-call? 'ST1HTBVD3JG9C05J7HBJTHGR0GGW7KXW28M5JS8QE.gamble winner)
-(contract-call? 'ST1HTBVD3JG9C05J7HBJTHGR0GGW7KXW28M5JS8QE.gamble get-lucky-num)
-::get_assets_maps
-(contract-call? 'ST1HTBVD3JG9C05J7HBJTHGR0GGW7KXW28M5JS8QE.gamble get-gambler1)
-(contract-call? 'ST1HTBVD3JG9C05J7HBJTHGR0GGW7KXW28M5JS8QE.gamble get-winner)
-::get_assets_maps
+(contract-call? .gamble  gambler1 u10 u9)\n
+(contract-call? .gamble  gambler2 u10 u9)\n
+(contract-call? .gamble  get-winner)\n
+(contract-call? .gamble  winner-receive)\n
+::get_assets_maps\n
+(contract-call? .gamble  gambler1 u10 u9)\n
+(contract-call? .gamble  gambler2 u10 u9)\n
+(contract-call? .gamble  get-winner)\n
+(contract-call? .gamble  winner-receive)\n
+::get_assets_maps\n
+(contract-call? .gamble  gambler1 u10 u9)\n
+(contract-call? .gamble  gambler2 u10 u9)\n
+(contract-call? .gamble  get-winner)\n
+(contract-call? .gamble  winner-receive)\n
+::get_assets_maps\n

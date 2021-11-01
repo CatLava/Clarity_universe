@@ -1,9 +1,10 @@
 [project]
 name = "ape-gamble"
 requirements = []
+
 [contracts.gamble]
 path = "contracts/gamble.clar"
-depends_on = []
+depends_on = ["winner-nft"]
 
 [contracts.nft-trait]
 path = "contracts/nft-trait.clar"

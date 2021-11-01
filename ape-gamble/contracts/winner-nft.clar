@@ -13,8 +13,9 @@
 (define-data-var last-id uint u0)
 
 ;; Claim a new NFT
-(define-public (claim)
-  (mint tx-sender))
+;; input of principal from gamble contract to claim
+(define-public (claim (claimant principal))
+  (mint claimant))
 
 ;; SIP009: Transfer token to a specified principal
 (define-public (transfer (token-id uint) (sender principal) (recipient principal))
